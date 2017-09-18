@@ -8,7 +8,12 @@
 
 #import "BSRating.h"
 
-@implementation BSRating
+@implementation BSRating{
+    
+    BSRatingType ratingType;
+    int totalStars;
+    int filledValue;
+}
 
 -(id)init{
     
@@ -19,12 +24,12 @@
     }
     return self;
 }
--(id)initWithFrame:(CGRect)frame withStarCount:(int)starCount filledCount:(int)filledCount ratingType:(BSRatingType)ratingType withColor:(UIColor *)color{
+-(id)initWithFrame:(CGRect)frame withStarCount:(int)starCount filledCount:(int)filledCount ratingType:(BSRatingType)type withColor:(UIColor *)color{
     
     if (self=[super initWithFrame:frame]) {
         
         self.frame=frame;
-        [self initializeRatingView:starCount withFilled:filledCount type:ratingType withColor:color];
+        [self initializeRatingView:starCount withFilled:filledCount type:type withColor:color];
     }
     return self;
 }
@@ -32,6 +37,11 @@
 -(void)initializeRatingView:(int)starCount withFilled:(int)filled type:(BSRatingType)type withColor:(UIColor *)color{
     
     float width=(self.frame.size.width/starCount);
+    
+    ratingType=type;
+    filledValue=filled;
+    totalStars=starCount;
+    
     for (int star=0; star<starCount; star++) {
         
         
@@ -53,9 +63,10 @@
         [starPath moveToPoint:pt];
 
         
-        for (int i = 0; i < starCount; i = i + 1) {
+        for (int i = 0; i < 5; i = i + 1) {
         
             theta = theta - (arcPerPoint / 2.0f);
+            
             if (theta < 0.0f) {
                 theta = theta + (2 * M_PI);
             }
@@ -102,52 +113,40 @@
     }
     
 }
-//-(CAKeyframeAnimation*)createAnimation{
-//    
-//    CAKeyframeAnimation *colorsAnimation = [CAKeyframeAnimation animationWithKeyPath:@"fillColor"];
-//    
-//    colorsAnimation.values = [NSArray arrayWithObjects: (id)UIColorFromRGB(0xe45f56).CGColor,
-//                              (id)UIColorFromRGB(0xa3d39c).CGColor,
-//                              (id)UIColorFromRGB(0x7accc8).CGColor,
-//                              (id)UIColorFromRGB(0x4aaaa5).CGColor,
-//                              (id)UIColorFromRGB(0x35404f).CGColor, nil];
-//    
-//    colorsAnimation.keyTimes = [NSArray arrayWithObjects:[NSNumber numberWithFloat:0.20], [NSNumber numberWithFloat:0.4], [NSNumber numberWithFloat:0.6],[NSNumber numberWithFloat:0.8],[NSNumber numberWithFloat:1.0], nil];
-//    colorsAnimation.calculationMode = kCAAnimationPaced;
-//    colorsAnimation.removedOnCompletion = NO;
-//    colorsAnimation.fillMode = kCAFillModeForwards;
-//    colorsAnimation.duration = k_Animation_Duration;
-//    
-//    
-//    return colorsAnimation;
-//}
-//-(void)startAnimations{
-//    
-//    [_circleLayerOne removeAllAnimations];
-//    [_circleLayerTwo removeAllAnimations];
-//    [_circleLayerThree removeAllAnimations];
-//    [_circleLayerFour removeAllAnimations];
-//    [_circleLayerFive removeAllAnimations];
-//    
-//    CAKeyframeAnimation *oneAnimation=[self createAnimation];
-//    [_circleLayerOne addAnimation:oneAnimation forKey:@"fillColor"];
-//    
-//    CAKeyframeAnimation *twoAnimation=[self createAnimation];
-//    twoAnimation.beginTime=CACurrentMediaTime() +k_Animation_Duration*0.15;
-//    [_circleLayerTwo addAnimation:twoAnimation forKey:@"fillColor"];
-//    
-//    CAKeyframeAnimation *threeAnimation=[self createAnimation];
-//    threeAnimation.beginTime=CACurrentMediaTime() +(k_Animation_Duration*0.30);
-//    [_circleLayerThree addAnimation:threeAnimation forKey:@"fillColor"];
-//    
-//    CAKeyframeAnimation *fourAnimation=[self createAnimation];
-//    fourAnimation.beginTime=CACurrentMediaTime() +(k_Animation_Duration*0.45);
-//    [_circleLayerFour addAnimation:fourAnimation forKey:@"fillColor"];
-//    
-//    CAKeyframeAnimation *fiveAnimation=[self createAnimation];
-//    fiveAnimation.beginTime=CACurrentMediaTime() +(k_Animation_Duration*0.60);
-//    [_circleLayerFive addAnimation:fiveAnimation forKey:@"fillColor"];
-//    
-//}
+-(void)setRatingColor:(UIColor*)color{
+    
+    NSArray *layers=[self layer].sublayers;
+    for (int star=0; star<layers.count; star++) {
+        
+        CAShapeLayer *shape=[layers objectAtIndex:star];
+        
+        if ([shape isKindOfClass:[CAShapeLayer class]]) {
+            
+            if (ratingType==BSRatingTypeOutlined) {
+                
+                if (star>=filledValue) {
+                    
+                    shape.fillColor=[UIColor clearColor].CGColor;
+                }else{
+                    
+                    shape.fillColor=color.CGColor;
+                }
+                shape.strokeColor=color.CGColor;
+                
+            }else{
+                
+                if (star>=filledValue) {
+                    
+                    shape.fillColor=[UIColor colorWithRed:0.8 green:0.8 blue:0.8 alpha:1.0].CGColor;
+                }else{
+                    
+                    shape.fillColor=color.CGColor;
+                }
+            }
+
+        }
+    }
+    
+}
 
 @end

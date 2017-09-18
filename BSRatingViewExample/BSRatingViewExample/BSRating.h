@@ -16,5 +16,6 @@ typedef enum : NSUInteger {
 @interface BSRating : UIView<CAAnimationDelegate>
 -(id)init;
 -(id)initWithFrame:(CGRect)frame withStarCount:(int)starCount filledCount:(int)filledCount ratingType:(BSRatingType)ratingType withColor:(UIColor*)color;
+-(void)setRatingColor:(UIColor*)color;
 
 @end
