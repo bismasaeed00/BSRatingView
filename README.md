@@ -12,9 +12,16 @@ BSRating *rating=[[BSRating alloc] initWithFrame:CGRectMake(20, 50, 110, 20) wit
 BSRating *rating2=[[BSRating alloc] initWithFrame:CGRectMake(20, 120, 100, 20) withStarCount:10 filledCount:7 ratingType:BSRatingTypeGrayed withColor:[UIColor redColor]];
 [self.view addSubview:rating2];
 ```
+### Storyboard support:
+Now, you can add a UIView in storyboard, assign it's class to BSRating and ratingView will be there. Just use specific customization in the controller.
+
 ## Customisation
-You can change the color of your choice by using this line before adding it as subview.
+You can change the color of your choice by using these methods.
 ```
-[rating setRatingColor:[UIColor magentaColor]];
+-(void)setRatingColor:(UIColor*)color;
+-(void)setRatingType:(BSRatingType)ratingType;
+-(void)settTotalStars:(int)totalStars;
+-(void)setFilledValue:(float)filledValue;
+
 ```
 ![alt tag](https://user-images.githubusercontent.com/16186934/30312640-d1391f06-97b3-11e7-84f7-5855f4d06630.png) 
