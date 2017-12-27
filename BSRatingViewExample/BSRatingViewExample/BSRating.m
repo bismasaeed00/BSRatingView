@@ -12,7 +12,8 @@
     
     BSRatingType ratingType;
     int totalStars;
-    int filledValue;
+    float filledValue;
+    UIColor *ratingColor;
 }
 
 -(id)init{
@@ -20,30 +21,61 @@
     if (self=[super init]) {
         
         self.frame=CGRectMake(20, 60, 200, 20);
-        [self initializeRatingView:5 withFilled:2 type:BSRatingTypeOutlined withColor:[UIColor yellowColor]];
+        
+        ratingType=BSRatingTypeOutlined;
+        filledValue=2.0;
+        totalStars=5;
+        ratingColor = [UIColor yellowColor];
+        [self populateRatingView];
+        
     }
     return self;
 }
--(id)initWithFrame:(CGRect)frame withStarCount:(int)starCount filledCount:(int)filledCount ratingType:(BSRatingType)type withColor:(UIColor *)color{
+-(id)initWithFrame:(CGRect)frame withStarCount:(int)starCount ratingValue:(float)ratingValue ratingType:(BSRatingType)type withColor:(UIColor *)color{
     
     if (self=[super initWithFrame:frame]) {
         
         self.frame=frame;
-        [self initializeRatingView:starCount withFilled:filledCount type:type withColor:color];
+        
+        ratingType=type;
+        filledValue=ratingValue;
+        totalStars=starCount;
+        ratingColor = color;
+        [self populateRatingView];
+        
     }
     return self;
 }
+-(void)awakeFromNib{
+    
+    [super awakeFromNib];
+    
+    NSLog(@"frame: x:%f , y:%f , w:%f , h:%f",self.frame.origin.x,self.frame.origin.y,self.frame.size.width,self.frame.size.height);
+    
+    ratingType=BSRatingTypeGrayed;
+    filledValue=2.0;
+    totalStars=5;
+    ratingColor = [UIColor blackColor];
+    [self populateRatingView];
+}
 
--(void)initializeRatingView:(int)starCount withFilled:(int)filled type:(BSRatingType)type withColor:(UIColor *)color{
+-(void)populateRatingView{
     
-    float width=(self.frame.size.width/starCount);
-    
-    ratingType=type;
-    filledValue=filled;
-    totalStars=starCount;
-    
-    for (int star=0; star<starCount; star++) {
+    [[self.layer.sublayers copy] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        CALayer * subLayer = obj;
+        if([subLayer isKindOfClass:[CAShapeLayer class]]){
+            [subLayer removeFromSuperlayer];
+        }
         
+    }];
+    
+    float width=(self.frame.size.width/totalStars);
+    if (self.frame.size.height<width) {
+        width=self.frame.size.height;
+    }
+
+    
+    for (int star=0; star<totalStars; star++) {
         
         CAShapeLayer* shapeLayer = [CAShapeLayer layer];
         shapeLayer.frame=CGRectMake((star*width), 0, width, width);
@@ -85,25 +117,25 @@
         [starPath closePath];
         [shapeLayer setPath:[starPath CGPath]];
         
-        if (type==BSRatingTypeOutlined) {
+        if (ratingType==BSRatingTypeOutlined) {
             
-            if (star>=filled) {
+            if (star>=filledValue) {
                 
                 shapeLayer.fillColor=[UIColor clearColor].CGColor;
             }else{
                 
-                shapeLayer.fillColor=color.CGColor;
+                shapeLayer.fillColor=ratingColor.CGColor;
             }
-            shapeLayer.strokeColor=color.CGColor;
+            shapeLayer.strokeColor=ratingColor.CGColor;
             
         }else{
             
-            if (star>=filled) {
+            if (star>=filledValue) {
                 
                 shapeLayer.fillColor=[UIColor colorWithRed:0.8 green:0.8 blue:0.8 alpha:1.0].CGColor;
             }else{
                 
-                shapeLayer.fillColor=color.CGColor;
+                shapeLayer.fillColor=ratingColor.CGColor;
             }
         }
         
@@ -115,38 +147,27 @@
 }
 -(void)setRatingColor:(UIColor*)color{
     
-    NSArray *layers=[self layer].sublayers;
-    for (int star=0; star<layers.count; star++) {
-        
-        CAShapeLayer *shape=[layers objectAtIndex:star];
-        
-        if ([shape isKindOfClass:[CAShapeLayer class]]) {
-            
-            if (ratingType==BSRatingTypeOutlined) {
-                
-                if (star>=filledValue) {
-                    
-                    shape.fillColor=[UIColor clearColor].CGColor;
-                }else{
-                    
-                    shape.fillColor=color.CGColor;
-                }
-                shape.strokeColor=color.CGColor;
-                
-            }else{
-                
-                if (star>=filledValue) {
-                    
-                    shape.fillColor=[UIColor colorWithRed:0.8 green:0.8 blue:0.8 alpha:1.0].CGColor;
-                }else{
-                    
-                    shape.fillColor=color.CGColor;
-                }
-            }
+    ratingColor = color;
+    [self populateRatingView];
 
-        }
-    }
+}
+
+-(void)setRatingType:(BSRatingType)type{
     
+    ratingType=type;
+    [self populateRatingView];
+    
+}
+-(void)settTotalStars:(int)stars{
+    
+    totalStars = stars;
+    [self populateRatingView];
+    
+}
+-(void)setFilledValue:(float)value{
+
+    filledValue = value;
+    [self populateRatingView];
 }
 
 @end

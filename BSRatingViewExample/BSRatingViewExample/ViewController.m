@@ -10,6 +10,7 @@
 #import "BSRating.h"
 
 @interface ViewController ()
+@property (weak, nonatomic) IBOutlet BSRating *ratingVew;
 
 @end
 
@@ -18,14 +19,18 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    BSRating *rating=[[BSRating alloc] initWithFrame:CGRectMake(20, 50, 110, 20) withStarCount:5 filledCount:3 ratingType:BSRatingTypeOutlined withColor:[UIColor blueColor]];
-    [rating setRatingColor:[UIColor magentaColor]];
-    [self.view addSubview:rating];
+//    BSRating *rating=[[BSRating alloc] initWithFrame:CGRectMake(20, 50, 110, 20) withStarCount:5 ratingValue:3 ratingType:BSRatingTypeOutlined withColor:[UIColor blueColor]];
+//    [rating setRatingColor:[UIColor magentaColor]];
+//    [self.view addSubview:rating];
+//    
+//    BSRating *rating2=[[BSRating alloc] initWithFrame:CGRectMake(20, 120, 100, 20) withStarCount:10 ratingValue:7 ratingType:BSRatingTypeOutlined withColor:[UIColor blueColor]];
+//    [rating2 setRatingColor:[UIColor cyanColor]];
+//    [self.view addSubview:rating2];
+//
     
-    BSRating *rating2=[[BSRating alloc] initWithFrame:CGRectMake(20, 120, 100, 20) withStarCount:10 filledCount:7 ratingType:BSRatingTypeGrayed withColor:[UIColor redColor]];
-    [rating2 setRatingColor:[UIColor cyanColor]];
-    [self.view addSubview:rating2];
-    
+    [self.ratingVew setRatingColor:[UIColor redColor]];
+    [self.ratingVew setFilledValue:4.0];
+    [self.ratingVew setRatingType:BSRatingTypeOutlined];
 }
 
 
