@@ -16,7 +16,7 @@ BSRating *rating2=[[BSRating alloc] initWithFrame:CGRectMake(20, 120, 100, 20) w
 Now, you can add a UIView in storyboard, assign it's class to BSRating and ratingView will be there. Just use specific customization in the controller.
 
 ## Customisation
-You can change the color of your choice by using these methods.
+You can customize BSRatingView using these methods.
 ```
 -(void)setRatingColor:(UIColor*)color;
 -(void)setRatingType:(BSRatingType)ratingType;
